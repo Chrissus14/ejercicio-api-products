@@ -23,4 +23,14 @@ router.post('/', (req, res) => {
   res.json(product);
 });
 
+// Eliminar un producto
+router.delete('/:id', (req, res) => {
+  const product = data.find(p => p.id === req.params.id);
+  if (!product) return res.status(404).json({ error: 'El producto con ese id no fue encontrado' });
+
+  const index = data.indexOf(product);
+  data.splice(index, 1);
+  res.json(product);
+});
+
 module.exports = router;
