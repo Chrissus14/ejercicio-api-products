@@ -67,9 +67,19 @@ router.post('/buy', (req, res) => {
 
   productBuyed.stock -= product.qty;
 
+  productBuyed.sold += productBuyed.value * product.qty;
+
   const total = totalGeneral.reduce((acumulador, valorAcutal) => acumulador + valorAcutal);
 
+  console.log(productBuyed);
+
   res.json({ msg: 'Tu compra fue realizada con exito', totalBuyed: total });
+});
+
+router.get('/:id', (req, res) => {
+  if (!data.some(p => p.id === req.params.id))
+    return res.status(404).json({ error: 'No se encontró producto con el id especificado' });
+  res.json(data.find(product => product.id === req.params.id));
 });
 
 module.exports = router;
