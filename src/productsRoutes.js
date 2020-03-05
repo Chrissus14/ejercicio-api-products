@@ -61,7 +61,7 @@ router.post('/buy', (req, res) => {
   const productBuyed = data.find(prod => prod.name === product.name);
 
   if (productBuyed.stock < product.qty)
-    res.status(400).json({ error: 'No tenemos la cantidad solicitada en existencia' });
+    return res.status(400).json({ error: 'No tenemos la cantidad solicitada en existencia' }); // Falto return
 
   totalGeneral.push(productBuyed.value * product.qty);
 
