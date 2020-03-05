@@ -33,4 +33,14 @@ router.delete('/:id', (req, res) => {
   res.json(product);
 });
 
+// Actualizar existencias
+router.put('/:id', (req, res) => {
+  const product = data.find(p => p.id === req.params.id);
+  if (product) {
+    product.stock++;
+    return res.json(product);
+  }
+  res.status(404).json({ error: `El producto con el id ${req.params.id} no se ha encontrado` });
+});
+
 module.exports = router;
