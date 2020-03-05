@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 const router = Router();
 
+const totalGeneral = [];
+
 router.get('/', (req, res) => {
   res.json(data);
 });
@@ -41,6 +43,33 @@ router.put('/:id', (req, res) => {
     return res.json(product);
   }
   res.status(404).json({ error: `El producto con el id ${req.params.id} no se ha encontrado` });
+});
+
+// Ver total vendido en general y actualizar existencias
+router.post('/buy', (req, res) => {
+  const product = {
+    name: req.body.product,
+    qty: +req.body.quantity
+  };
+
+  if (!product.name || !product.qty)
+    return res.status(400).json({ error: 'Todos los campos son requeridos' });
+
+  if (!data.some(prod => prod.name === product.name))
+    return res.status(404).json({ error: `El producto ${product.name} no fue encontrado` });
+
+  const productBuyed = data.find(prod => prod.name === product.name);
+
+  if (productBuyed.stock < product.qty)
+    res.status(400).json({ error: 'No tenemos la cantidad solicitada en existencia' });
+
+  totalGeneral.push(productBuyed.value * product.qty);
+
+  productBuyed.stock -= product.qty;
+
+  const total = totalGeneral.reduce((acumulador, valorAcutal) => acumulador + valorAcutal);
+
+  res.json({ msg: 'Tu compra fue realizada con exito', totalBuyed: total });
 });
 
 module.exports = router;
